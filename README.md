@@ -16,3 +16,4 @@ Current TODO list
 - Write up the service that actually scans for iBeacons
 - Figure out more functionality for the library
 - Add more checks to compatibility manager? 
+- Implement an example
