@@ -1,6 +1,6 @@
 package com.acompagno.beacon;
 
-import java.util.UUID;
+import java.util.Arrays;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,28 +10,7 @@ import android.os.Parcelable;
  * 
  * @author Andre Compagno (Last Edited: Andre Compagno)
  */
-public class Beacon implements Comparable<Beacon>, Parcelable {
-
-    /**
-     * Holds the raw data for the given iBeacon Module
-     */
-    private String rawData;
-    /**
-     * Holds the UUID for the iBeacon Module
-     */
-    private UUID uuid;
-    /**
-     * Holds the Major value for the iBeacon Module
-     */
-    private int major;
-    /**
-     * Holds the minor value for the iBeacon Module
-     */
-    private int minor;
-    /**
-     * Holds the RSSI value @ 1 meter for the iBeacon Module
-     */
-    private int rssi;
+public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable {
 
     /**
      * Creates an instance of Beacon using the values stored in the
@@ -40,70 +19,70 @@ public class Beacon implements Comparable<Beacon>, Parcelable {
      * @param parcel Parcel
      */
     private Beacon(final Parcel parcel) {
-        this.rawData = parcel.readString();
-        this.uuid = UUID.fromString(parcel.readString());
+        this.name = parcel.readString();
+        this.address = parcel.readString();
+        parcel.readByteArray(this.rawData);
+        this.uuid = parcel.readString();
         this.major = parcel.readInt();
         this.minor = parcel.readInt();
         this.rssi = parcel.readInt();
     }
 
     /**
-     * Creates an instance of Beacon using the given raw broadcast data
-     * to parse out the information of the Beacon.
+     * Creates an instance of Beacon using the values from the 
+     * given in BeaconBuilder
      * 
-     * @param rawData String
+     * @param builder BeaconBuilder
      */
-    public Beacon(final String rawData) {
+    public Beacon(final BeaconBuilder builder) {
+        this(builder.getName(),
+                builder.getAddress(),
+                builder.getRawData(),
+                builder.getUUID(),
+                builder.getMajor(),
+                builder.getMinor(),
+                builder.getRSSI());
+    }
+
+    /**
+     * Creates an instance of beacon using the given values 
+     * 
+     * @param name String
+     * @param address String
+     * @param rawData byte[]
+     * @param uuid String
+     * @param major int
+     * @param minor int
+     * @param rssi int
+     */
+    public Beacon(final String name,
+            final String address,
+            final byte[] rawData,
+            final String uuid,
+            final int major,
+            final int minor,
+            final int rssi) {
+        this.name = name;
         this.rawData = rawData;
-        this.uuid = BeaconDataParser.getUUIDFromRawData(rawData);
-        this.major = BeaconDataParser.getMajorFromRawData(rawData);
-        this.minor = BeaconDataParser.getMinorFromRawData(rawData);
-        this.rssi = BeaconDataParser.getRSSIFromRawData(rawData);
+        this.uuid = uuid;
+        this.major = major;
+        this.minor = minor;
+        this.rssi = rssi;
     }
 
-    /**
-     * Surfaces the UUID of the Beacon
-     * 
-     * @return UUID
-     */
-    public UUID getUUID() {
-        return this.uuid;
-    }
 
-    /**
-     * Surfaces the major value of the Beacon
-     * 
-     * @return int
-     */
-    public int getMajor() {
-        return this.major;
-    }
-
-    /**
-     * Surfaces the minor value of the Beacon
-     * 
-     * @return int
-     */
-    public int getMinor() {
-        return this.minor;
-    }
-
-    /**
-     * Surfaces the RSSI calibration value of the Beacon
-     * 
-     * @return int
-     */
-    public int getRSSI() {
-        return this.rssi;
-    }
-
-    /**
-     * Surfaces the raw broadcast data of the Beacon
-     * 
-     * @return int
-     */
-    public String getRawData() {
-        return this.rawData;
+    @Override
+    public int compareTo(final Beacon another) {
+        final int uuidCompare = this.uuid.compareTo(another.getUUID());
+        if (uuidCompare != 0) {
+            return uuidCompare;
+        } else if (this.major != another.getMajor()) {
+            return this.major > another.getMajor() ? 1 : -1; 
+        } else if (this.minor != another.getMinor()) {
+            return this.minor > another.getMinor() ? 1 : -1;
+        } else {
+            return 0;
+        }
     }
 
     /*
@@ -115,7 +94,8 @@ public class Beacon implements Comparable<Beacon>, Parcelable {
         int result = 1;
         result = prime * result + major;
         result = prime * result + minor;
-        result = prime * result + ((rawData == null) ? 0 : rawData.hashCode());
+        result = prime * result + Arrays.hashCode(rawData);
+        result = prime * result + rssi;
         result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
         return result;
     }
@@ -141,11 +121,10 @@ public class Beacon implements Comparable<Beacon>, Parcelable {
         if (minor != other.minor) {
             return false;
         }
-        if (rawData == null) {
-            if (other.rawData != null) {
-                return false;
-            }
-        } else if (!rawData.equals(other.rawData)) {
+        if (!Arrays.equals(rawData, other.rawData)) {
+            return false;
+        }
+        if (rssi != other.rssi) {
             return false;
         }
         if (uuid == null) {
@@ -159,20 +138,6 @@ public class Beacon implements Comparable<Beacon>, Parcelable {
     }
 
     @Override
-    public int compareTo(Beacon another) {
-        final int uuidCompare = this.uuid.compareTo(another.getUUID());
-        if (uuidCompare != 0) {
-            return uuidCompare;
-        } else if (this.major != another.getMajor()) {
-            return this.major > another.getMajor() ? 1 : -1; 
-        } else if (this.minor != another.getMinor()) {
-            return this.minor > another.getMinor() ? 1 : -1;
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
     public int describeContents() {
         // TODO forgot what I was supposed to put here
         return 0;
@@ -180,8 +145,10 @@ public class Beacon implements Comparable<Beacon>, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(rawData);
-        dest.writeString(this.uuid.toString());
+        dest.writeString(this.name);
+        dest.writeString(this.address);
+        dest.writeByteArray(this.rawData);
+        dest.writeString(this.uuid);
         dest.writeInt(this.major);
         dest.writeInt(this.minor);
         dest.writeInt(this.rssi);
@@ -201,4 +168,5 @@ public class Beacon implements Comparable<Beacon>, Parcelable {
             return new Beacon[size];
         }
     };
+
 }

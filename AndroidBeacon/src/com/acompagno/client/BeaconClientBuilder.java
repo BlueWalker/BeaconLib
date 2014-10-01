@@ -5,30 +5,20 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+
 /**
  * Builds a BeaconScanClient
  * 
  * @author Andre Compagno (Last Edited: Andre Compagno)
  */
-public class BeaconClientBuilder {
+public class BeaconClientBuilder extends BeaconClientBase {
 
     /**
      * Default scan interval value in milliseconds
      */
-    private static final int DEFAULT_SCAN_INTERVAL = 1000;
-
-    /**
-     * Amount of time in milliseconds the client will wait while the service 
-     * is scanning for Beacons
-     */
-    private int scanInterval;
-    /**
-     * Set of UUIDs that the client will use as a whitelist when scanning
-     * for Beacons. Only Beacons whose UUID is in this set will be surfaced
-     * by the client. If it is left empty, all Beacons will be surfaced by 
-     * the client 
-     */
-    private Set<UUID> validUUIDs;
+    private static final int DEFAULT_SCAN_INTERVAL = 10000;
 
     /**
      * Creates an instance of the BeaconClientBuilder and sets all the fields 
@@ -36,7 +26,7 @@ public class BeaconClientBuilder {
      */
     public BeaconClientBuilder() {
         this.scanInterval = DEFAULT_SCAN_INTERVAL;
-        this.validUUIDs = new HashSet<UUID>();
+        this.validUUIDs = new HashSet<String>();
     }
 
     /**
@@ -46,7 +36,7 @@ public class BeaconClientBuilder {
      * @return BeaconScanClient
      */
     public BeaconScanClient build() {
-        return new BeaconScanClient(this.scanInterval, this.validUUIDs);
+        return new BeaconScanClient(this);
     }
 
     /**
@@ -66,8 +56,18 @@ public class BeaconClientBuilder {
      * @param uuids UUID
      * @return BeaconClientBuilder (current instance of the builder)
      */
-    public BeaconClientBuilder addUUID(final UUID...uuids) {
+    public BeaconClientBuilder addUUID(final String...uuids) {
         this.validUUIDs.addAll(Arrays.asList(uuids));
+        return this;
+    }
+
+    public BeaconClientBuilder setLeScanCallback(final BluetoothAdapter.LeScanCallback leScanCallback) {
+        this.leScanCallback = leScanCallback;
+        return this;
+    }
+
+    public BeaconClientBuilder setContext(final Context context) {
+        this.context = context;
         return this;
     }
 }

@@ -12,38 +12,58 @@ import android.util.Log;
  */
 public class CompatibilityManager {
 
-    private static final String INVALID_VERSION_MESSAGE = 
+    private static final String INVALID_VERSION_MESSAGE =
             "Android version (%d) on device does not support Bluetooth LE";
     private static final String UNSUPPORTED_DEVICE_MESSAGE = 
             "Device does not support Bluetooth LE";
-    
-    /**
-     * Holds the applications context
-     */
-    private Context applicationContext;
+    private static final String INITALIZATION_ERROR = 
+            "CompatibilityManager has not been initalized";
 
     /**
-     * Creates an instance of the compatibility manager and sets
-     * the application context field
+     * Holds the application context
+     */
+    private static Context applicationContext;
+
+    /**
+     * Private constructor so this class can't be initialized
+     */
+    private CompatibilityManager() {}
+
+    /**
+     * Initializes the CompatibilityManager 
      * 
      * @param applicationContext Context
      */
-    public CompatibilityManager(final Context applicationContext) {
-        this.applicationContext = applicationContext;
+    public static void init(final Context context) {
+        applicationContext = context;
+    }
+
+    /**
+     * Indicates whether the CompatibilityManager has been initialized
+     * 
+     * @return boolean
+     */
+    public static boolean isInitalized() {
+        return applicationContext != null;
     }
 
     /**
      * Checks if version of android the device is running and the device
-     * hardware supports Bluetooth LE. If the device doesnt support BLE, 
-     * the reasons will be printed to the log. TODO Check more things? 
-     *  
+     * hardware supports Bluetooth LE. If the device doesn't support BLE, 
+     * the reasons will be printed to the log. If the class has not yet
+     * been initialized, false will be returned TODO Check more things? 
+     * 
      * @return boolean
      */
-    public boolean isDeviceCompatible() {
+    public static boolean isDeviceCompatible() {
+        if (!isInitalized()) {
+            Log.w("isDeviceCompatible", INITALIZATION_ERROR);
+            return false;
+        }
         // Check if device is running at least android version 4.3
         final int deviceVersion =  android.os.Build.VERSION.SDK_INT;
         //Check if device hardware supports BLE
-        final boolean compatibleHardware = this.applicationContext.getPackageManager()
+        final boolean compatibleHardware = applicationContext.getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
         if (deviceVersion < 18) {
             Log.w("isDeviceCompatible", String.format(INVALID_VERSION_MESSAGE, deviceVersion));

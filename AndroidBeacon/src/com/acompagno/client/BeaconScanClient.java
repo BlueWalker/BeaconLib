@@ -1,7 +1,12 @@
 package com.acompagno.client;
 
 import java.util.Set;
-import java.util.UUID;
+
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+
+import com.acompagno.service.BLEScanner;
+import com.acompagno.utils.CompatibilityManager;
 
 /**
  * Client in charge of communicating with the Service and the user. Starts 
@@ -9,20 +14,22 @@ import java.util.UUID;
  * 
  * @author Andre Compagno (Last Edited: Andre Compagno)
  */
-public class BeaconScanClient {
+public class BeaconScanClient extends BeaconClientBase {
+
+    private BLEScanner bleScanner;
 
     /**
-     * Amount of time in milliseconds the client will wait while the service 
-     * is scanning for Beacons
+     * Creates an instance of the BeaconScanClient using the values 
+     * from the BeaconClientBuilder
+     * 
+     * @param builder BeaconClientBuilder
      */
-    private int scanInterval;
-    /**
-     * Set of UUIDs that the client will use as a whitelist when scanning
-     * for Beacons. Only Beacons whose UUID is in this set will be surfaced
-     * by the client. If it is left empty, all Beacons will be surfaced by 
-     * the client 
-     */
-    private Set<UUID> validUUIDs;
+    public BeaconScanClient(final BeaconClientBuilder builder) {
+        this(builder.getScanInterval(),
+                builder.getValidUUIDs(),
+                builder.getLeScanCallback(),
+                builder.getContext());
+    }
 
     /**
      * Creates an instance of the BeaconScanClient using the given parameters.
@@ -30,35 +37,29 @@ public class BeaconScanClient {
      * @param scanInterval int (in milliseconds)
      * @param validUUIDs Set<UUID>
      */
-    public BeaconScanClient(final int scanInterval, final Set<UUID> validUUIDs) {
+    public BeaconScanClient(final int scanInterval,
+            final Set<String> validUUIDs,
+            final BluetoothAdapter.LeScanCallback leScanCallback,
+            final Context context) {
+        if (!CompatibilityManager.isInitalized()) {
+            CompatibilityManager.init(context);
+        }
         this.scanInterval = scanInterval;
         this.validUUIDs = validUUIDs;
+        this.bleScanner = new BLEScanner(context, leScanCallback);
     }
 
     /**
-     * Surfaces the current scan interval (in milliseconds) for the client
-     * 
-     * @return int
+     * Starts the BLEScanner
      */
-    public int getScanInterval() {
-        return this.scanInterval;
+    public void startScanning() {
+        bleScanner.setScanStatus(true);
     }
 
     /**
-     * Set a new scan interval for the client
-     * 
-     * @param scanInterval int (in milliseconds)
+     * Stops the BLEScanner
      */
-    public void setScanInterval(final int scanInterval) {
-        this.scanInterval = scanInterval;
-    }
-
-    /**
-     * Surfaces the valid UUIDs for the client
-     * 
-     * @return Set<UUID>
-     */
-    public Set<UUID> getValicUUIDs() {
-        return this.validUUIDs;
+    public void stopScanning() {
+        bleScanner.setScanStatus(false);
     }
 }
