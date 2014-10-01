@@ -1,6 +1,11 @@
 package com.acompagno.beacon.example;
 
+import java.util.List;
+import java.util.Random;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.LightingColorFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,53 +13,60 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class BeaconListAdapter extends ArrayAdapter<String> {
-    private final Activity context;
-    private final String[] names;
+import com.acompagno.beacon.Beacon;
 
-    //Here are the views in each item 
-    static class ViewHolder {
-        public TextView text;
-        public TextView subText;
+public class BeaconListAdapter extends ArrayAdapter<Beacon> {
+
+    private static final String MAJOR_TEXT_FORMAT = "Major - %d";
+    private static final String MINOR_TEXT_FORMAT = "Minor - %d";
+    private static final String RSSI_TEXT_FORMAT = "Calibration RSSI - %d";
+    private static final String UUID_TEXT_FORMAT = "UUID - %s";
+
+    private final Activity context;
+    private final List<Beacon> beacons;
+
+    /**
+     * Holds all the views used for the item in the Beacon ListView
+     */
+    private class ViewHolder {
+        public TextView majorText;
+        public TextView minorText;
+        public TextView rssiText;
+        public TextView uuidText;
         public ImageView icon;
     }
 
-    public BeaconListAdapter(Activity context, String[] names) {
-        super(context, R.layout.list_view_item, names);
+    public BeaconListAdapter(final Activity context, final List<Beacon> beacons) {
+        super(context, R.layout.list_view_item, beacons);
         this.context = context;
-        this.names = names;
+        this.beacons = beacons;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View rowView = convertView;
         if (rowView == null) {
             LayoutInflater inflater = context.getLayoutInflater();
-            //Get the layout from the xml file 
             rowView = inflater.inflate(R.layout.list_view_item, null);
 
-            //initalize viewholder
-            ViewHolder viewHolder = new ViewHolder();
-            //get the main textview
-            viewHolder.text = (TextView) rowView.findViewById(R.id.text);
-            //get the subtext textview
-            viewHolder.subText = (TextView) rowView.findViewById(R.id.sub_text);
-            //get the icon imageview 
+            final ViewHolder viewHolder = new ViewHolder();
+            viewHolder.majorText = (TextView) rowView.findViewById(R.id.major_text);
+            viewHolder.minorText = (TextView) rowView.findViewById(R.id.minor_text);
+            viewHolder.rssiText = (TextView) rowView.findViewById(R.id.rssi_text);
+            viewHolder.uuidText = (TextView) rowView.findViewById(R.id.uuid_text);
             viewHolder.icon = (ImageView) rowView.findViewById(R.id.icon);
 
-            //set the tag as the viewholder
             rowView.setTag(viewHolder);
         }
 
-        //Grab the viewholder from the tag
-        ViewHolder holder = (ViewHolder) rowView.getTag();
-        //Set the text of the main text 
-        holder.text.setText(names[position]);
-        //set the text of the sub text
-        holder.subText.setText("This is "+names[position]);
-        //set the image of the imageview 
+        final ViewHolder holder = (ViewHolder) rowView.getTag();
+        final Beacon beacon = this.beacons.get(position);
+        holder.majorText.setText(String.format(MAJOR_TEXT_FORMAT, beacon.getMajor()));
+        holder.minorText.setText(String.format(MINOR_TEXT_FORMAT, beacon.getMinor()));
+        holder.rssiText.setText(String.format(RSSI_TEXT_FORMAT, beacon.getRSSI()));
+        holder.uuidText.setText(String.format(UUID_TEXT_FORMAT, beacon.getUUID().toString()));
         holder.icon.setImageResource(R.drawable.ic_launcher_trans);
-
         return rowView;
     }
 } 
