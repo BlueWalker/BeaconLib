@@ -1,7 +1,7 @@
 package com.acompagno.beacon;
 
 /**
- * TODO
+ * Base implementation of a Beacon containing all its fields and their getters.
  * 
  * @author Andre Compagno (Last Edited: Andre Compagno)
  */
@@ -53,6 +53,7 @@ public class BeaconBase implements BeaconInterface {
     public String getAddress() {
         return this.address;
     }
+
     /**
      * Surfaces the UUID of the Beacon
      * 

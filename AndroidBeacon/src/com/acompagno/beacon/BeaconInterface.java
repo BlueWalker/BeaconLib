@@ -2,7 +2,7 @@ package com.acompagno.beacon;
 
 
 /**
- * TODO
+ * Interface for a beacon. Defines the getters for all the fields
  * 
  * @author Andre Compagno (Last Edited: Andre Compagno)
  */

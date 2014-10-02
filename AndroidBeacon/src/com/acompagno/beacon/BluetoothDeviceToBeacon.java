@@ -32,6 +32,19 @@ public class BluetoothDeviceToBeacon {
      * Pattern used to match serch for the regex in the signal
      */
     private static final Pattern BEACON_DATA_PATTERN = Pattern.compile(BEACON_DATA_REGEX);
+    /**
+     * Log message format for when a Beacon is found
+     */
+    private static final String LOG_BEACON_FOUND_FORMAT = "Given device converted to Beacon - %s";
+    /**
+     * Log message format for when a ble device which is not a Beacon is found 
+     */
+    private static final String LOG_NOT_BEACON_FORMAT = "Given device is not a Beacon - %s";
+
+    /**
+     * Private constructor so this class can't be initialized
+     */
+    private BluetoothDeviceToBeacon() {}
 
     /**
      * Converts the given BluetoothDevice, RSSI value, and Scan record into a Beacon
@@ -44,15 +57,17 @@ public class BluetoothDeviceToBeacon {
     public static Beacon toBeacon(final BluetoothDevice btDevice, final int rssi, final byte[] scanRecord) {
         final String beaconSignal = rawSignalToString(scanRecord);
         if (!isBeacon(beaconSignal)) {
-            Log.w("Not an iBeacon!", String.format("Failed iBeacon - %s", btDevice.getName()));
+            Log.d(getClassName(), String.format(LOG_NOT_BEACON_FORMAT, btDevice.getName()));
             return null;
         }
         final String beaconUUID = beaconSignal.substring(18,50);
         final int beaconMajor = Integer.parseInt(beaconSignal.substring(50, 54), 16);
         final int beaconMinor = Integer.parseInt(beaconSignal.substring(54, 58), 16);
         final int calibrationRSSI = Short.valueOf(beaconSignal.substring(58, 60),16).byteValue();
+        Log.d(getClassName(), String.format(LOG_BEACON_FOUND_FORMAT, btDevice.getName()));
         return new BeaconBuilder()
                     .setBeaconName(btDevice.getName())
+                    .setBeaconAddress(btDevice.getAddress())
                     .setBeaconRawData(scanRecord)
                     .setBeaconUUID(beaconUUID)
                     .setBeaconMajor(beaconMajor)
@@ -84,5 +99,15 @@ public class BluetoothDeviceToBeacon {
     public static boolean isBeacon(final String beaconData) {
         final Matcher dataMatcher = BEACON_DATA_PATTERN.matcher(beaconData);
         return dataMatcher.find();
+    }
+
+    /**
+     * Gets the class name since we can't use this.getClass()
+     * from static methods
+     * 
+     * @return String
+     */
+    private static String getClassName() {
+        return BluetoothDeviceToBeacon.class.getName();
     }
 }

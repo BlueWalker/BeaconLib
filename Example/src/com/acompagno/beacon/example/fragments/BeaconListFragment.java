@@ -19,22 +19,46 @@ import com.acompagno.beacon.example.MainActivity;
 import com.acompagno.client.BeaconClientBuilder;
 import com.acompagno.client.BeaconScanClient;
 
+/**
+ * Fragment that displays a list of Beacons found
+ * 
+ * @author Andre Compagno (Last Edited: Andre Compagno)
+ */
 public class BeaconListFragment extends ListFragment {
 
-    private static final String BEACON_FOUND_LOG_TAG = "Found new Beacon!";
+    /**
+     * Log message format
+     */
     private static final String BEACON_FOUND_LOG = "Name - %s\n\tRaw data (hex) - %s";
 
+    /**
+     * Holds the Beacons found
+     */
     private List<Beacon> beacons;
+    /**
+     * The client that scans for Beacons
+     */
     private BeaconScanClient scanClient;
 
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.beacons = new ArrayList<Beacon>();
-        final BeaconListAdapter adapter = new BeaconListAdapter(getActivity() , this.beacons);
-        setListAdapter(adapter);
-        buildBeaconClient();
-        this.scanClient.startScanning();
+        // Lazy initialize all these things since this method gets called
+        // every time the fragment is displayed.
+        if (this.beacons == null) {
+            this.beacons = new ArrayList<Beacon>();
+        }
+        if (getListAdapter() == null) {
+            final BeaconListAdapter adapter = new BeaconListAdapter(getActivity() , this.beacons);
+            setListAdapter(adapter);
+        }
+        if (this.scanClient == null) {
+            this.scanClient = new BeaconClientBuilder()
+                    .setContext(getActivity())
+                    .setLeScanCallback(leScanCallback)
+                    .build();
+            this.scanClient.startScanning();
+        }
     }
 
     @Override
@@ -47,15 +71,9 @@ public class BeaconListFragment extends ListFragment {
 
     }
 
-    private void buildBeaconClient() {
-        if (scanClient == null) {
-            scanClient = new BeaconClientBuilder()
-                .setContext(getActivity())
-                .setLeScanCallback(leScanCallback)
-                .build();
-        }
-    }
-
+    /**
+     * Callback that defines what will happen once a Bluetooth device is found
+     */
     private BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
 
         @Override
@@ -69,6 +87,9 @@ public class BeaconListFragment extends ListFragment {
         }
     };
 
+    /**
+     * Runnable that is responsible for adding the beacons to the adapter 
+     */
     private class LeCallbackRunnable implements Runnable {
 
         private Beacon beacon;
@@ -83,8 +104,9 @@ public class BeaconListFragment extends ListFragment {
         public void run() {
             final int beaconPosition = listAdapter.getPosition(beacon);
             if (beaconPosition < 0) {
-                Log.w(BEACON_FOUND_LOG_TAG, String.format(BEACON_FOUND_LOG, beacon.getName(),
-                        BluetoothDeviceToBeacon.rawSignalToString(beacon.getRawData())));
+                Log.d(this.getClass().getName(),
+                        String.format(BEACON_FOUND_LOG, beacon.getName(), 
+                                        BluetoothDeviceToBeacon.rawSignalToString(beacon.getRawData())));
                 listAdapter.add(beacon);
             }
         }

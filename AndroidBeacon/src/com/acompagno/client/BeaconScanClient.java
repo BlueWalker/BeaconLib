@@ -9,13 +9,16 @@ import com.acompagno.service.BLEScanner;
 import com.acompagno.utils.CompatibilityManager;
 
 /**
- * Client in charge of communicating with the Service and the user. Starts 
+ * Client in charge of communicating with the Scanner and the user. Starts 
  * and stops the service as necessary and surfaces the results to the user.
  * 
  * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 public class BeaconScanClient extends BeaconClientBase {
 
+    /**
+     * Instance of the scanner being used by the client
+     */
     private BLEScanner bleScanner;
 
     /**
@@ -33,6 +36,7 @@ public class BeaconScanClient extends BeaconClientBase {
 
     /**
      * Creates an instance of the BeaconScanClient using the given parameters.
+     * It also ensure that the compatibility manager is initialized
      * 
      * @param scanInterval int (in milliseconds)
      * @param validUUIDs Set<UUID>
@@ -61,5 +65,14 @@ public class BeaconScanClient extends BeaconClientBase {
      */
     public void stopScanning() {
         bleScanner.setScanStatus(false);
+    }
+
+    /**
+     * Surfaces whether the scanner is currently scanning
+     * 
+     * @return boolean
+     */
+    public boolean isScanning() {
+        return bleScanner.isScanning();
     }
 }

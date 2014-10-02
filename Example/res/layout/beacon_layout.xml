@@ -3,15 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/beacon_relative"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/beacon_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </RelativeLayout>
+
+        <TextView
+            android:id="@+id/beacon_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/beacon_uuid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/beacon_major"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/beacon_minor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/beacon_calibration_rssi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </ScrollView>

@@ -1,4 +1,4 @@
-AndroidBeacon (Andre's branch)
+AndroidBeacon
 ===
 
 Current Done
@@ -15,5 +15,6 @@ Current TODO list
 - describeContents method for Beacon. Forgot what I'm supposed to return here.
 - Figure out more functionality for the library
 - Add more checks to compatibility manager? 
-- Go through all TODO's in the code
 - Implement Distance functionality
+- Make the example application look nicer
+- Smooth out functionality of the 

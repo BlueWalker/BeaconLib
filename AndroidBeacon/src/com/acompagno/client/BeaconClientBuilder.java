@@ -2,8 +2,6 @@ package com.acompagno.client;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -61,11 +59,23 @@ public class BeaconClientBuilder extends BeaconClientBase {
         return this;
     }
 
+    /**
+     * Sets the LeScanCallback that will be used by the client
+     * 
+     * @param leScanCallback BluetoothAdapter.LeScanCallback
+     * @return BeaconClientBuilder (current instance of the builder)
+     */
     public BeaconClientBuilder setLeScanCallback(final BluetoothAdapter.LeScanCallback leScanCallback) {
         this.leScanCallback = leScanCallback;
         return this;
     }
 
+    /**
+     * Sets the context that will be used by the client 
+     * 
+     * @param context Context
+     * @return BeaconClientBuilder (current instance of the builder)
+     */
     public BeaconClientBuilder setContext(final Context context) {
         this.context = context;
         return this;

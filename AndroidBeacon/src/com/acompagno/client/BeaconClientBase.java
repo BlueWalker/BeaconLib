@@ -6,7 +6,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 
 /**
- * TODO
+ * Base implementation of the client that includes all of the
+ * clients fields and their getters 
  * 
  * @author Andre Compagno (Last Edited: Andre Compagno)
  */
@@ -50,7 +51,6 @@ public class BeaconClientBase implements BeaconClientInterface {
 
     @Override
     public int getScanInterval() {
-        // TODO Auto-generated method stub
-        return 0;
+        return 0; //TODO Implement setting the scan interval
     }
 }

@@ -12,13 +12,21 @@ import android.util.Log;
  */
 public class CompatibilityManager {
 
+    /**
+     * Log message for devices running an unsupported version of android
+     */
     private static final String INVALID_VERSION_MESSAGE =
             "Android version (%d) on device does not support Bluetooth LE";
+    /**
+     * Log message for when the device doesnt support BLE
+     */
     private static final String UNSUPPORTED_DEVICE_MESSAGE = 
             "Device does not support Bluetooth LE";
+    /**
+     * Log message for when the CompatibilityManager isn't initialized
+     */
     private static final String INITALIZATION_ERROR = 
             "CompatibilityManager has not been initalized";
-
     /**
      * Holds the application context
      */
@@ -74,5 +82,13 @@ public class CompatibilityManager {
         return deviceVersion >= 18 && compatibleHardware; 
     }
 
-
+    /**
+     * Gets the class name since we can't use this.getClass()
+     * from static methods
+     * 
+     * @return String
+     */
+    public static String getClassName() {
+        return CompatibilityManager.class.getName();
+    }
 }

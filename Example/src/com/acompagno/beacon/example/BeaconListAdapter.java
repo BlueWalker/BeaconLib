@@ -1,11 +1,9 @@
 package com.acompagno.beacon.example;
 
 import java.util.List;
-import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.LightingColorFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +13,43 @@ import android.widget.TextView;
 
 import com.acompagno.beacon.Beacon;
 
+/**
+ * Adapter that handles the Beacons being added to the ListView
+ * 
+ * @author Andre Compagno (Last Edited: Andre Compagno)
+ */
 public class BeaconListAdapter extends ArrayAdapter<Beacon> {
 
+    /**
+     * Format for the Major TextView
+     */
     private static final String MAJOR_TEXT_FORMAT = "Major - %d";
+    /**
+     * Format for the Minor TextView
+     */
     private static final String MINOR_TEXT_FORMAT = "Minor - %d";
+    /**
+     * Format for the RSSI TextView
+     */
     private static final String RSSI_TEXT_FORMAT = "Calibration RSSI - %d";
+    /**
+     * Format for the UUID TextView
+     */
     private static final String UUID_TEXT_FORMAT = "UUID - %s";
 
+    /**
+     * Holds the context being used throughout the Adapter
+     */
     private final Activity context;
+    /**
+     * Holds list of Beacons in the adapter
+     */
     private final List<Beacon> beacons;
 
     /**
      * Holds all the views used for the item in the Beacon ListView
      */
-    private class ViewHolder {
+    static class ViewHolder {
         public TextView majorText;
         public TextView minorText;
         public TextView rssiText;
@@ -36,6 +57,12 @@ public class BeaconListAdapter extends ArrayAdapter<Beacon> {
         public ImageView icon;
     }
 
+    /**
+     * Creates an instance of BeaconListAdapter using the given values
+     * 
+     * @param context Activity
+     * @param beacons List<Beacon>
+     */
     public BeaconListAdapter(final Activity context, final List<Beacon> beacons) {
         super(context, R.layout.list_view_item, beacons);
         this.context = context;
