@@ -1,5 +1,6 @@
 package walker.blue.beacon.lib.beacon;
 
+
 import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 

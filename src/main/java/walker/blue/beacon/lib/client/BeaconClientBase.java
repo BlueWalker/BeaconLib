@@ -7,8 +7,8 @@ import java.util.Set;
 
 /**
  * Base implementation of the client that includes all of the
- * clients fields and their getters 
- * 
+ * clients fields and their getters
+ *
  * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 public class BeaconClientBase implements BeaconClientInterface {

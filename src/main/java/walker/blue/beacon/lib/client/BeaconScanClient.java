@@ -1,5 +1,6 @@
 package walker.blue.beacon.lib.client;
 
+
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 

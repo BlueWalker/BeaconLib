@@ -9,7 +9,6 @@ import android.util.Log;
 
 import walker.blue.beacon.lib.utils.CompatibilityManager;
 
-
 /**
  * Scans for iBeacon modules.
  *
@@ -127,7 +126,7 @@ public class BLEScanner {
         if (!CompatibilityManager.isDeviceCompatible()) {
             return null;
         } else if (this.bluetoothAdapter == null){
-            final BluetoothManager bluetoothManager = 
+            final BluetoothManager bluetoothManager =
                     (BluetoothManager) this.context.getSystemService(Context.BLUETOOTH_SERVICE);
             this.bluetoothAdapter = bluetoothManager.getAdapter();
         }

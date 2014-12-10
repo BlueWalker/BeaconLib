@@ -1,5 +1,6 @@
 package walker.blue.beacon.lib.utils;
 
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.util.Log;
