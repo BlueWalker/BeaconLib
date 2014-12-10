@@ -1,20 +1,14 @@
-AndroidBeacon
+BeaconLib
 ===
 
-Current Done
+Adding it to your Android Studio project
 ---
-- Basic framework for Beacon and ScanClient somewhat implemented
-- Started implementing a builder for the client. This will keep growing as more options and functionality is implemented into the Client
-- Placeholder class made to parse the iBeacon signal
-- Added permission to android manifest
-- Basic functionality of the Example and the Library is done
-- Checking that a device is a beacon using a regex on on the signal
-
-Current TODO list
----
-- describeContents method for Beacon. Forgot what I'm supposed to return here.
-- Figure out more functionality for the library
-- Add more checks to compatibility manager? 
-- Implement Distance functionality
-- Make the example application look nicer
-- Smooth out functionality of the 
+1. Clone the repository into your computer
+2. Import the library into your project by going to File->Import Module
+3. Choose the BeaconLib repository as the "Source directory" then click finish
+4. In the build.gradle file for your application add the module as a dependency
+```GRADLE
+dependencies {
+    compile project(':BeaconLib')
+}
+```
