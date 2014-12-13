@@ -11,20 +11,17 @@ import walker.blue.beacon.lib.utils.CompatibilityManager;
 
 /**
  * Scans for iBeacon modules.
- *
- * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 @TargetApi(18)
 public class BLEScanner {
 
     /**
-     * Log message
+     * Log messages
      */
     private static final String LOG_ALREADY_SCANNING = "Cant start scanning. Scanner is already scanning.";
-    /**
-     * Log message
-     */
     private static final String LOG_NOT_SCANNING = "Cant stop scanning. Scanner is not currently scanning.";
+    private static final String LOG_SCAN_STARTED = "BLEScanner scan started for %d milliseconds.";
+    private static final String LOG_SCAN_STOPPED = "BLEScanner scan stopped.";
 
     /**
      * Stores the BluetoothAdapter used in the scanner
@@ -52,10 +49,9 @@ public class BLEScanner {
      */
     private boolean scanning;
     /**
-     * Amount of time (in milliseconds) before the scan times out
-     * TODO Make this changeable
+     * User defined actions once scan in done
      */
-    private int scanTime;
+    private ScanEndUserCallback userCallback;
 
     /**
      * Creates an instance of the BLEScanner using the given parameters
@@ -69,7 +65,10 @@ public class BLEScanner {
         this.scanEndHandler = new Handler();
         this.endScanRunnable = new EndBLEScanRunnable();
         this.bluetoothAdapter = getBluetoothAdapter();
-        this.scanTime = 10000;
+    }
+
+    public void setUserEndRunable(final ScanEndUserCallback userCallback) {
+        this.userCallback = userCallback;
     }
 
     /**
@@ -82,13 +81,23 @@ public class BLEScanner {
     }
 
     /**
-     * Sets the status of the scanner
-     * 
+     * Sets the status of the scanner. Defaults scan time to -1
+     *
      * @param enable boolean
      */
     public void setScanStatus(final boolean enable) {
+        setScanStatus(enable, -1);
+    }
+
+    /**
+     * Sets the status of the scanner
+     * 
+     * @param enable boolean
+     * @param scanTime int (in milliseconds)
+     */
+    public void setScanStatus(final boolean enable, final int scanTime) {
         if (enable && !scanning) {
-            startLeScan();
+            startLeScan(scanTime);
         } else if (!enable && scanning) { 
             stopLeScan();
         } else if (!enable && !scanning) {
@@ -100,11 +109,14 @@ public class BLEScanner {
 
     /**
      * Starts the scanner and sets up the timeout runnable
+     *
+     * @param scanTime int (in milliseconds)
      */
-    private void startLeScan() {
+    private void startLeScan(final int scanTime) {
         scanEndHandler.postDelayed(endScanRunnable, scanTime);
         scanning = true;
         bluetoothAdapter.startLeScan(leScanCallback);
+        Log.d(this.getClass().getName(), String.format(LOG_SCAN_STARTED, scanTime));
     }
 
     /**
@@ -114,7 +126,7 @@ public class BLEScanner {
         scanEndHandler.removeCallbacks(endScanRunnable);
         scanning = false;
         getBluetoothAdapter().stopLeScan(leScanCallback);
-
+        Log.d(this.getClass().getName(), LOG_SCAN_STOPPED);
     }
 
     /**
@@ -140,6 +152,9 @@ public class BLEScanner {
         @Override
         public void run() {
             stopLeScan();
+            if (userCallback != null) {
+                userCallback.execute();
+            }
         }
     }
 }

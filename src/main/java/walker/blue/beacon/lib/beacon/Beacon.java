@@ -3,12 +3,12 @@ package walker.blue.beacon.lib.beacon;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Represents an iBeacon module and holds all it's information
- * 
- * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable {
 
@@ -26,6 +26,8 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
         this.major = parcel.readInt();
         this.minor = parcel.readInt();
         this.rssi = parcel.readInt();
+        this.measuredRSSI = new ArrayList<Integer>();
+        parcel.readList(this.measuredRSSI, null);
     }
 
     /**
@@ -41,7 +43,8 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
                 builder.getUUID(),
                 builder.getMajor(),
                 builder.getMinor(),
-                builder.getRSSI());
+                builder.getRSSI(),
+                builder.getMeasuredRSSIValues());
     }
 
     /**
@@ -61,13 +64,15 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
             final String uuid,
             final int major,
             final int minor,
-            final int rssi) {
+            final int rssi,
+            final List<Integer> measuredRSSI) {
         this.name = name;
         this.rawData = rawData;
         this.uuid = uuid;
         this.major = major;
         this.minor = minor;
         this.rssi = rssi;
+        this.measuredRSSI = measuredRSSI;
     }
 
 
@@ -139,7 +144,6 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
 
     @Override
     public int describeContents() {
-        // TODO forgot what I was supposed to put here
         return 0;
     }
 
@@ -152,6 +156,7 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
         dest.writeInt(this.major);
         dest.writeInt(this.minor);
         dest.writeInt(this.rssi);
+        dest.writeList(this.measuredRSSI);
     }
 
     /**
@@ -169,4 +174,12 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
         }
     };
 
+    /**
+     * Adds a new measured rssi value to the measured values
+     *
+     * @param rssi int
+     */
+    public void addMeasuredRSSI(final int rssi) {
+        this.measuredRSSI.add(rssi);
+    }
 }

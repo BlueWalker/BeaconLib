@@ -10,15 +10,14 @@ import java.util.regex.Pattern;
 /**
  * Class responsible for converting the objects found by scanning for
  * BLE devices into iBeacons 
- * 
- * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 public class BluetoothDeviceToBeacon {
 
     /**
      * Regex used to determine whether the data given belongs to a beacon
-     * "02011a1aff4c00021" is the Bluetooth signature that should be the same
-     *      for all ibeacons
+     * "0201" Shouldn't change between beacons
+     * "[a-f0-9]{2}' Manufacturer Identifier
+     * "1aff4c00021" Shouldn't change between beacons
      * "[a-f0-9]{43}" refers to the unique data for each beacon. This checks
      *      that there are at least 43 more valid hex values in the signal
      * ".*" TODO make this better? according to the stack overflow question
@@ -26,9 +25,8 @@ public class BluetoothDeviceToBeacon {
      *      most beacons i check just have 0's not sure....
      * 
      *http://stackoverflow.com/questions/18906988/what-is-the-ibeacon-bluetooth-profile
-     *  
      */
-    private static final String BEACON_DATA_REGEX = "^02011a1aff4c00021[a-f0-9]{43}.*";
+    private static final String BEACON_DATA_REGEX = "^0201[a-f0-9]{2}1aff[a-f0-9]{4}0215[a-f0-9]{42}.*";
     /**
      * Pattern used to match serch for the regex in the signal
      */
@@ -74,6 +72,7 @@ public class BluetoothDeviceToBeacon {
                     .setBeaconMajor(beaconMajor)
                     .setBeaconMinor(beaconMinor)
                     .setBeaconRSSI(calibrationRSSI)
+                    .setMeasuredRSSI(rssi)
                     .build();
     }
 

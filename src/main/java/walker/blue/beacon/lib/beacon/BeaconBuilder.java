@@ -1,11 +1,18 @@
 package walker.blue.beacon.lib.beacon;
 
+import java.util.ArrayList;
+
 /**
  * Class used to build Beacon objects
- * 
- * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 public class BeaconBuilder extends BeaconBase {
+
+    /**
+     * Initialized the list of measured rssi values
+     */
+    public BeaconBuilder() {
+        this.measuredRSSI = new ArrayList<Integer>();
+    }
 
     /**
      * Sets the name of the Beacon being built
@@ -85,6 +92,17 @@ public class BeaconBuilder extends BeaconBase {
     }
 
     /**
+     * Sets the first measured RSSI value for the Beacon
+     *
+     * @param rssi int
+     * @return BeaconBuilder
+     */
+    public BeaconBuilder setMeasuredRSSI(final int rssi) {
+        this.measuredRSSI.add(rssi);
+        return this;
+    }
+
+    /**
      * Builds the new Beacon using the set values
      * 
      * @return Beacon
@@ -92,4 +110,5 @@ public class BeaconBuilder extends BeaconBase {
     public Beacon build() {
         return new Beacon(this);
     }
+
 }

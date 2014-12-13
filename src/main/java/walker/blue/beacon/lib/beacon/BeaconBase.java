@@ -1,41 +1,45 @@
 package walker.blue.beacon.lib.beacon;
 
 
+import java.util.List;
+
 /**
  * Base implementation of a Beacon containing all its fields and their getters.
- * 
- * @author Andre Compagno (Last Edited: Andre Compagno)
  */
-public class BeaconBase implements BeaconInterface {
+public abstract class BeaconBase implements BeaconInterface {
 
     /**
-     * Holds the name of the given iBeacon module
+     * Holds the name of the given Beacon
      */
     protected String name;
     /**
-     * Holds the mac address of the given iBeacon module
+     * Holds the mac address of the given Beacon
      */
     protected String address;
     /**
-     * Holds the raw data for the given iBeacon Module
+     * Holds the raw data for the given Beacon
      */
     protected byte[] rawData;
     /**
-     * Holds the UUID for the iBeacon Module
+     * Holds the UUID for the Beacon
      */
     protected String uuid;
     /**
-     * Holds the Major value for the iBeacon Module
+     * Holds the Major value for the Beacon
      */
     protected int major;
     /**
-     * Holds the minor value for the iBeacon Module
+     * Holds the minor value for the Beacon
      */
     protected int minor;
     /**
-     * Holds the RSSI value @ 1 meter for the iBeacon Module
+     * Holds the RSSI value @ 1 meter for the Beacon
      */
     protected int rssi;
+    /**
+     * List of measured RSSI values for the Beacon
+     */
+    protected List<Integer> measuredRSSI;
 
     /**
      * Surfaces the name of the Beacon
@@ -98,5 +102,14 @@ public class BeaconBase implements BeaconInterface {
      */
     public byte[] getRawData() {
         return this.rawData;
+    }
+
+    /**
+     * Surfaces a list of the measured rssi values for the Beacon
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getMeasuredRSSIValues() {
+        return this.measuredRSSI;
     }
 }

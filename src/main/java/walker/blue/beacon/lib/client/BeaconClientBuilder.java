@@ -7,15 +7,15 @@ import android.content.Context;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import walker.blue.beacon.lib.service.ScanEndUserCallback;
+
 /**
  * Builds a BeaconScanClient
- * 
- * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 public class BeaconClientBuilder extends BeaconClientBase {
 
     /**
-     * Default scan interval value in milliseconds
+     * Default scan interval value in milliseconds (10 seconds)
      */
     private static final int DEFAULT_SCAN_INTERVAL = 10000;
 
@@ -79,6 +79,17 @@ public class BeaconClientBuilder extends BeaconClientBase {
      */
     public BeaconClientBuilder setContext(final Context context) {
         this.context = context;
+        return this;
+    }
+
+    /**
+     * Sets the callback executed once the client stops scanning
+     *
+     * @param userCallback ScanEndUserCallback
+     * @return BeaconClientBuilder (current instance of the builder)
+     */
+    public BeaconClientBuilder setUserCallback(final ScanEndUserCallback userCallback) {
+        this.userCallback = userCallback;
         return this;
     }
 }

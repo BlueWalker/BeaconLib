@@ -6,10 +6,10 @@ import android.content.Context;
 
 import java.util.Set;
 
+import walker.blue.beacon.lib.service.ScanEndUserCallback;
+
 /**
  * Basic interface for the client that defines the getters for the fields
- * 
- * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 public interface BeaconClientInterface {
 
@@ -40,4 +40,12 @@ public interface BeaconClientInterface {
      * @return int
      */
     public int getScanInterval();
+
+    /**
+     * Surfaces the user defined Callback executed once the client stops
+     * scanning
+     *
+     * @return ScanEndUserCallback
+     */
+    public ScanEndUserCallback getUserCallback();
 }

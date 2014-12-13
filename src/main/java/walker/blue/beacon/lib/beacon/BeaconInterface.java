@@ -1,9 +1,9 @@
 package walker.blue.beacon.lib.beacon;
 
+import java.util.List;
+
 /**
  * Interface for a beacon. Defines the getters for all the fields
- * 
- * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 public interface BeaconInterface {
 
@@ -55,4 +55,11 @@ public interface BeaconInterface {
      * @return int
      */
     public byte[] getRawData();
+
+    /**
+     * Surfaces a list of the measured rssi values for the Beacon
+     *
+     * @return List<Integer>
+     */
+    public List<Integer> getMeasuredRSSIValues();
 }

@@ -5,11 +5,11 @@ import android.content.Context;
 
 import java.util.Set;
 
+import walker.blue.beacon.lib.service.ScanEndUserCallback;
+
 /**
  * Base implementation of the client that includes all of the
  * clients fields and their getters
- *
- * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 public class BeaconClientBase implements BeaconClientInterface {
 
@@ -33,6 +33,10 @@ public class BeaconClientBase implements BeaconClientInterface {
      * Stores the context that will be used in the BeaconScanClient
      */
     protected Context context;
+    /**
+     * Callback which get executed once the client stops scanning
+     */
+    protected ScanEndUserCallback userCallback;
 
     @Override
     public Context getContext() {
@@ -51,6 +55,11 @@ public class BeaconClientBase implements BeaconClientInterface {
 
     @Override
     public int getScanInterval() {
-        return 0; //TODO Implement setting the scan interval
+        return this.scanInterval;
+    }
+
+    @Override
+    public ScanEndUserCallback getUserCallback() {
+        return this.userCallback;
     }
 }

@@ -7,13 +7,12 @@ import android.content.Context;
 import java.util.Set;
 
 import walker.blue.beacon.lib.service.BLEScanner;
+import walker.blue.beacon.lib.service.ScanEndUserCallback;
 import walker.blue.beacon.lib.utils.CompatibilityManager;
 
 /**
  * Client in charge of communicating with the Scanner and the user. Starts 
  * and stops the service as necessary and surfaces the results to the user.
- * 
- * @author Andre Compagno (Last Edited: Andre Compagno)
  */
 public class BeaconScanClient extends BeaconClientBase {
 
@@ -32,7 +31,8 @@ public class BeaconScanClient extends BeaconClientBase {
         this(builder.getScanInterval(),
                 builder.getValidUUIDs(),
                 builder.getLeScanCallback(),
-                builder.getContext());
+                builder.getContext(),
+                builder.getUserCallback());
     }
 
     /**
@@ -40,25 +40,27 @@ public class BeaconScanClient extends BeaconClientBase {
      * It also ensure that the compatibility manager is initialized
      * 
      * @param scanInterval int (in milliseconds)
-     * @param validUUIDs Set<UUID>
+     * @param validUUIDs Set<String>
      */
     public BeaconScanClient(final int scanInterval,
             final Set<String> validUUIDs,
             final BluetoothAdapter.LeScanCallback leScanCallback,
-            final Context context) {
+            final Context context,
+            final ScanEndUserCallback userCallback) {
         if (!CompatibilityManager.isInitalized()) {
             CompatibilityManager.init(context);
         }
         this.scanInterval = scanInterval;
         this.validUUIDs = validUUIDs;
         this.bleScanner = new BLEScanner(context, leScanCallback);
+        this.bleScanner.setUserEndRunable(userCallback);
     }
 
     /**
      * Starts the BLEScanner
      */
     public void startScanning() {
-        bleScanner.setScanStatus(true);
+        bleScanner.setScanStatus(true, this.scanInterval);
     }
 
     /**
@@ -75,5 +77,14 @@ public class BeaconScanClient extends BeaconClientBase {
      */
     public boolean isScanning() {
         return bleScanner.isScanning();
+    }
+
+    /**
+     * Set the scan interval for the next scan
+     *
+     * @param scanInterval int (in milliseconds))
+     */
+    public void setScanningInterval(final int scanInterval) {
+        this.scanInterval = scanInterval;
     }
 }
