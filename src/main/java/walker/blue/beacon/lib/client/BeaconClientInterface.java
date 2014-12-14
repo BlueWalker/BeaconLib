@@ -23,7 +23,7 @@ public interface BeaconClientInterface {
     /**
      * Surfaces the set of Valid UUIDs for the client
      * 
-     * @return Set<String>
+     * @return Set of Strings
      */
     public Set<String> getValidUUIDs();
 

@@ -38,9 +38,12 @@ public class BeaconScanClient extends BeaconClientBase {
     /**
      * Creates an instance of the BeaconScanClient using the given parameters.
      * It also ensure that the compatibility manager is initialized
-     * 
+     *
      * @param scanInterval int (in milliseconds)
-     * @param validUUIDs Set<String>
+     * @param validUUIDs Set of Strings
+     * @param leScanCallback BluetoothAdapter.LeScanCallback
+     * @param context   Context
+     * @param userCallback  ScanEndUserCallback
      */
     public BeaconScanClient(final int scanInterval,
             final Set<String> validUUIDs,

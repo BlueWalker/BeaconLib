@@ -9,6 +9,12 @@ buildscript {
 
 apply plugin: 'com.android.library'
 
+ext {
+    PUBLISH_GROUP_ID = 'blue.walker'
+    PUBLISH_ARTIFACT_ID = 'beacon-lib'
+    PUBLISH_VERSION = '0.1.0'
+}
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.1"
@@ -41,3 +47,5 @@ android.libraryVariants.all { variant ->
 task wrapper(type: Wrapper) {
     gradleVersion = '2.2.1'
 }
+
+apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'

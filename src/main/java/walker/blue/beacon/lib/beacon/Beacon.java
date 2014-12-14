@@ -57,6 +57,7 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
      * @param major int
      * @param minor int
      * @param rssi int
+     * @param measuredRSSI List of Integers
      */
     public Beacon(final String name,
             final String address,

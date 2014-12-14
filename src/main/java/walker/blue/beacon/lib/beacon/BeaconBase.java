@@ -107,7 +107,7 @@ public abstract class BeaconBase implements BeaconInterface {
     /**
      * Surfaces a list of the measured rssi values for the Beacon
      *
-     * @return List<Integer>
+     * @return List of Integers
      */
     public List<Integer> getMeasuredRSSIValues() {
         return this.measuredRSSI;
