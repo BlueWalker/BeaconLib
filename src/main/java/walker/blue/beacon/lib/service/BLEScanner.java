@@ -67,6 +67,10 @@ public class BLEScanner {
         this.bluetoothAdapter = getBluetoothAdapter();
     }
 
+    /**
+     * Sets the user callback for the Scanner
+     * @param userCallback ScanEndUserCallback
+     */
     public void setUserEndRunable(final ScanEndUserCallback userCallback) {
         this.userCallback = userCallback;
     }
@@ -105,6 +109,15 @@ public class BLEScanner {
         } else if (enable && scanning) {
             Log.w(this.getClass().getName(), LOG_ALREADY_SCANNING);
         }
+    }
+
+    /**
+     * Indicated whether the device has bluetooth enabled.
+     *
+     * @return boolean
+     */
+    public boolean isBluetoothEnabled() {
+        return this.bluetoothAdapter.isEnabled();
     }
 
     /**

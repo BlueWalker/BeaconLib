@@ -83,6 +83,15 @@ public class BeaconScanClient extends BeaconClientBase {
     }
 
     /**
+     * Inidcated whether the device has bluetooth enabled
+     *
+     * @return boolean
+     */
+    public boolean isBluetoothEnabled() {
+        return bleScanner.isBluetoothEnabled();
+    }
+
+    /**
      * Set the scan interval for the next scan
      *
      * @param scanInterval int (in milliseconds))
@@ -90,4 +99,5 @@ public class BeaconScanClient extends BeaconClientBase {
     public void setScanningInterval(final int scanInterval) {
         this.scanInterval = scanInterval;
     }
+
 }
