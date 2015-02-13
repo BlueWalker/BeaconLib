@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.+'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
     }
 }
@@ -55,7 +55,11 @@ task sourcesJar(type: Jar) {
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    /*
+     * TODO: Getting error complaining that setTargetInfo should be called before
+     *       getBootClasspath. I should look into this
+     * classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+     */
 }
 
 task javadocJar(type: Jar, dependsOn: androidJavadocs) {
