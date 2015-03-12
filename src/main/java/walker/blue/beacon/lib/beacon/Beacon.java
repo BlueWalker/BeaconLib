@@ -68,6 +68,7 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
             final int rssi,
             final List<Integer> measuredRSSI) {
         this.name = name;
+        this.address = address;
         this.rawData = rawData;
         this.uuid = uuid;
         this.major = major;
