@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import walker.blue.beacon.lib.utils.CompatibilityManager;
@@ -62,7 +63,7 @@ public class BLEScanner {
     public BLEScanner(final Context context, final BluetoothAdapter.LeScanCallback leScanCallback) {
         this.context = context;
         this.leScanCallback = leScanCallback;
-        this.scanEndHandler = new Handler();
+        this.scanEndHandler = new Handler(Looper.getMainLooper());
         this.endScanRunnable = new EndBLEScanRunnable();
         this.bluetoothAdapter = getBluetoothAdapter();
     }
