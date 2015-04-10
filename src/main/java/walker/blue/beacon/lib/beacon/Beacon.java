@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,9 +12,14 @@ import java.util.List;
 public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable {
 
     /**
+     * Average value of all the rssi values
+     */
+    private double average;
+
+    /**
      * Creates an instance of Beacon using the values stored in the
      * given parcel. 
-     * 
+     *
      * @param parcel Parcel
      */
     private Beacon(final Parcel parcel) {
@@ -26,14 +30,14 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
         this.major = parcel.readInt();
         this.minor = parcel.readInt();
         this.rssi = parcel.readInt();
-        this.measuredRSSI = new ArrayList<Integer>();
+        this.measuredRSSI = new ArrayList<>();
         parcel.readList(this.measuredRSSI, null);
     }
 
     /**
      * Creates an instance of Beacon using the values from the 
      * given in BeaconBuilder
-     * 
+     *
      * @param builder BeaconBuilder
      */
     public Beacon(final BeaconBuilder builder) {
@@ -49,7 +53,7 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
 
     /**
      * Creates an instance of beacon using the given values 
-     * 
+     *
      * @param name String
      * @param address String
      * @param rawData byte[]
@@ -60,13 +64,13 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
      * @param measuredRSSI List of Integers
      */
     public Beacon(final String name,
-            final String address,
-            final byte[] rawData,
-            final String uuid,
-            final int major,
-            final int minor,
-            final int rssi,
-            final List<Integer> measuredRSSI) {
+                  final String address,
+                  final byte[] rawData,
+                  final String uuid,
+                  final int major,
+                  final int minor,
+                  final int rssi,
+                  final List<Integer> measuredRSSI) {
         this.name = name;
         this.address = address;
         this.rawData = rawData;
@@ -74,9 +78,25 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
         this.major = major;
         this.minor = minor;
         this.rssi = rssi;
+        this.average = 0;
         this.measuredRSSI = measuredRSSI;
     }
 
+    /**
+     * Calculated the average value of all the measured rssi values
+     *
+     * @return average of all the measured rssi values
+     */
+    public double getAverageRSSIValue() {
+        if (this.average == 0) {
+            int total = 0;
+            for (final int rssi : this.measuredRSSI) {
+                total += rssi;
+            }
+            this.average = total / this.measuredRSSI.size();
+        }
+        return this.average;
+    }
 
     @Override
     public int compareTo(final Beacon another) {
@@ -84,7 +104,7 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
         if (uuidCompare != 0) {
             return uuidCompare;
         } else if (this.major != another.getMajor()) {
-            return this.major > another.getMajor() ? 1 : -1; 
+            return this.major > another.getMajor() ? 1 : -1;
         } else if (this.minor != another.getMinor()) {
             return this.minor > another.getMinor() ? 1 : -1;
         } else {
@@ -101,8 +121,6 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
         int result = 1;
         result = prime * result + major;
         result = prime * result + minor;
-        result = prime * result + Arrays.hashCode(rawData);
-        result = prime * result + rssi;
         result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
         return result;
     }
@@ -126,12 +144,6 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
             return false;
         }
         if (minor != other.minor) {
-            return false;
-        }
-        if (!Arrays.equals(rawData, other.rawData)) {
-            return false;
-        }
-        if (rssi != other.rssi) {
             return false;
         }
         if (uuid == null) {
@@ -165,16 +177,16 @@ public class Beacon extends BeaconBase implements Comparable<Beacon>, Parcelable
      * This is used by android to automatically recreate an object from a
      * parcel when its being sent/received
      */
-    public static final Parcelable.Creator<Beacon> CREATOR= 
+    public static final Parcelable.Creator<Beacon> CREATOR=
             new Parcelable.Creator<Beacon>() {
-        public Beacon createFromParcel(Parcel in) {
-            return new Beacon(in);
-        }
+                public Beacon createFromParcel(Parcel in) {
+                    return new Beacon(in);
+                }
 
-        public Beacon[] newArray(int size) {
-            return new Beacon[size];
-        }
-    };
+                public Beacon[] newArray(int size) {
+                    return new Beacon[size];
+                }
+            };
 
     /**
      * Adds a new measured rssi value to the measured values
