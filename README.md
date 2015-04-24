@@ -7,7 +7,7 @@ BeaconLib is availiable through JCenter.
 ```GRADLE
 dependencies {
     // Other dependencies
-    compile 'blue.walker:beacon-lib:0.1.1'
+    compile 'blue.walker:BeaconLib:0.1.+'
     // Other dependencies
 }
 ```
