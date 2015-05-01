@@ -1,6 +1,8 @@
 BeaconLib
 ===
 
+[![Build Status](https://travis-ci.org/BlueWalker/BeaconLib.svg)](https://travis-ci.org/BlueWalker/BeaconLib)
+
 Adding it to your Android Studio project
 ---
 BeaconLib is availiable through JCenter.
