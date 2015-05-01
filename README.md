@@ -3,12 +3,11 @@ BeaconLib
 
 Adding it to your Android Studio project
 ---
-BeaconLib is availiable through JCenter. 
+BeaconLib is availiable through JCenter.
+
 ```GRADLE
 dependencies {
-    // Other dependencies
     compile 'blue.walker:BeaconLib:0.1.+'
-    // Other dependencies
 }
 ```
 
